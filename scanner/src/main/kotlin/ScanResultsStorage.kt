@@ -37,6 +37,7 @@ import org.ossreviewtoolkit.model.config.FileBasedStorageConfiguration
 import org.ossreviewtoolkit.model.config.PostgresStorageConfiguration
 import org.ossreviewtoolkit.model.config.ScanStorageConfiguration
 import org.ossreviewtoolkit.model.config.ScannerConfiguration
+import org.ossreviewtoolkit.model.config.Sw360StorageConfiguration
 import org.ossreviewtoolkit.scanner.storages.*
 import org.ossreviewtoolkit.utils.ORT_FULL_NAME
 import org.ossreviewtoolkit.utils.log
@@ -96,6 +97,7 @@ abstract class ScanResultsStorage {
                 is FileBasedStorageConfiguration -> createFileBasedStorage(config)
                 is PostgresStorageConfiguration -> createPostgresStorage(config)
                 is ClearlyDefinedStorageConfiguration -> createClearlyDefinedStorage(config)
+                is Sw360StorageConfiguration -> configureSw360Storage(config)
             }
 
         /**
@@ -165,6 +167,37 @@ abstract class ScanResultsStorage {
          */
         private fun createClearlyDefinedStorage(config: ClearlyDefinedStorageConfiguration): ScanResultsStorage =
             ClearlyDefinedStorage(config)
+
+        /**
+         * Configure a [Sw360Storage] as the current storage backend.
+         */
+        private fun configureSw360Storage(config: Sw360StorageConfiguration): ScanResultsStorage {
+            require(config.restUrl.isNotBlank()) {
+                "URL for SW360 REST API is missing."
+            }
+
+            require(config.authUrl.isNotBlank()) {
+                "URL for SW360 authentication server is missing."
+            }
+
+            require(config.username.isNotBlank()) {
+                "Username for SW360 is missing."
+            }
+
+            require(config.password.isNotBlank()) {
+                "Password of the username for SW360 is missing."
+            }
+
+            require(config.clientId.isNotBlank()) {
+                "Client ID of the SW360 instance is missing."
+            }
+
+            require(config.clientPassword.isNotBlank()) {
+                "Client password of the SW360 instance is missing."
+            }
+
+            return Sw360Storage(config)
+        }
     }
 
     /**

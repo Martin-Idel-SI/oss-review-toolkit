@@ -61,6 +61,7 @@ class OrtPackageNaming : Rule() {
             "detekt-rules" -> ".detekt"
             "helper-cli" -> ".helper"
             "spdx-utils" -> ".spdx"
+            "sw360" -> ".sw360"
             "test-utils" -> ".utils.test"
             else -> ".$projectDir"
         }

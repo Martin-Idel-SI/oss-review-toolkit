@@ -89,7 +89,7 @@ class ListLicenseCategoriesCommand : CliktCommand(
         }
 
     private fun License.description(ignoreCategory: String? = null): String {
-        val categories = sets.toMutableList().apply {
+        val categories = categories.toMutableList().apply {
             if (includeInNoticeFile) {
                 add("include-in-notices")
             }
@@ -112,6 +112,6 @@ class ListLicenseCategoriesCommand : CliktCommand(
 
     private fun Collection<License>.groupByCategory(): Map<String, List<License>> =
         flatMap { license ->
-            license.sets.map { category -> license to category }
+            license.categories.map { category -> license to category }
         }.groupBy({ it.second }, { it.first })
 }

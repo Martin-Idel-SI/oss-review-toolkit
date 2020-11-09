@@ -10,6 +10,7 @@ categories:
 - name: "strong-copyleft"
 - name: "copyleft-limited"
 - name: "permissive"
+  description: "Licenses that can be included in inner-source projects without restrictions."
 - name: "public-domain"
 categorizations:
 - id: "AGPL-1.0"

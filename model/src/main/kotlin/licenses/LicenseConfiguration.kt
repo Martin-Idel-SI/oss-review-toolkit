@@ -22,6 +22,11 @@ package org.ossreviewtoolkit.model.licenses
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
+import java.util.SortedSet
+
+import org.ossreviewtoolkit.spdx.SpdxExpression
+import org.ossreviewtoolkit.spdx.SpdxSingleLicenseExpression
+
 /**
  * A classification for licenses which allows to assign meta data to licenses. It allows defining rather generic
  * categories and assigning licenses to these. That way flexible classifications can be created based on
@@ -65,6 +70,11 @@ data class LicenseConfiguration(
         }
     }
 
+    /** A property allowing convenient access to the names of all categories defined. */
+    val categoryNames: SortedSet<String> by lazy {
+        licenseCategories.map { it.name }.toSortedSet()
+    }
+
     /**
      * A property for fast look-ups of licenses for a given category.
      */
@@ -84,9 +94,26 @@ data class LicenseConfiguration(
         result
     }
 
-    @Suppress("UNUSED") // This is intended to be mostly used via scripting.
+    /**
+     * Return a set with the licenses that are assigned to the category with the given [name][categoryName].
+     * If the there is no category with the name provided, throw an [IllegalStateException].
+     * This is intended to be mostly used via scripting.
+     */
     fun getLicensesForCategory(categoryName: String): Set<License> =
         licensesByCategoryName[categoryName] ?: error("Unknown license category name: $categoryName.")
+
+    /** A property for fast-lookups of licenses by their ID. */
+    private val licensesById: Map<SpdxSingleLicenseExpression, License> by lazy {
+        licenses.fold(mutableMapOf()) { map, lic ->
+            map[lic.id] = lic
+            map
+        }
+    }
+
+    /**
+     * Returns the [License] for the given [id] or *null* if no such license can be found.
+     */
+    operator fun get(id: SpdxExpression): License? = licensesById[id]
 }
 
 fun LicenseConfiguration?.orEmpty(): LicenseConfiguration = this ?: LicenseConfiguration()

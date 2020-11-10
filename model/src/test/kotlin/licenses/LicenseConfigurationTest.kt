@@ -45,16 +45,13 @@ class LicenseConfigurationTest : WordSpec({
 
         "detect duplicate license IDs" {
             val lic1 = License(
-                SpdxSingleLicenseExpression.parse("ASL-1"), emptySortedSet(),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = false
+                SpdxSingleLicenseExpression.parse("ASL-1"), emptySortedSet()
             )
             val lic2 = License(
-                SpdxSingleLicenseExpression.parse("ASL-2"), emptySortedSet(),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("ASL-2"), emptySortedSet()
             )
             val lic3 = License(
-                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf("permissive"),
-                includeInNoticeFile = false, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf("permissive")
             )
 
             shouldThrow<IllegalArgumentException> {
@@ -66,12 +63,10 @@ class LicenseConfigurationTest : WordSpec({
             val cat1 = LicenseCategory("Category 1")
             val cat2 = LicenseCategory("Category 2")
             val lic1 = License(
-                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf(cat1.name),
-                includeInNoticeFile = false, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf(cat1.name)
             )
             val lic2 = License(
-                SpdxSingleLicenseExpression.parse("ASL-2"), sortedSetOf("unknownCategory"),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = false
+                SpdxSingleLicenseExpression.parse("ASL-2"), sortedSetOf("unknownCategory")
             )
 
             shouldThrow<java.lang.IllegalArgumentException> {
@@ -85,16 +80,13 @@ class LicenseConfigurationTest : WordSpec({
             val cat1 = LicenseCategory("permissive", "Permissive licenses")
             val cat2 = LicenseCategory("non permissive", "Strict licenses")
             val lic1 = License(
-                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf("permissive"),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = false
+                SpdxSingleLicenseExpression.parse("ASL-1"), sortedSetOf("permissive")
             )
             val lic2 = License(
-                SpdxSingleLicenseExpression.parse("ASL-2"), sortedSetOf("permissive"),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("ASL-2"), sortedSetOf("permissive")
             )
             val lic3 = License(
-                SpdxSingleLicenseExpression.parse("GPL"), sortedSetOf("non permissive"),
-                includeInNoticeFile = false, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("GPL"), sortedSetOf("non permissive")
             )
             val licenseConfiguration = LicenseConfiguration(
                 licenseCategories = listOf(cat1, cat2),
@@ -109,8 +101,7 @@ class LicenseConfigurationTest : WordSpec({
         "throw an exception when querying the licenses for an unknown category" {
             val cat = LicenseCategory("oneAndOnlyCategory")
             val lic = License(
-                SpdxSingleLicenseExpression.parse("LICENSE"), sortedSetOf(cat.name),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("LICENSE"), sortedSetOf(cat.name)
             )
             val licenseConfiguration = LicenseConfiguration(licenses = listOf(lic), licenseCategories = listOf(cat))
 
@@ -123,12 +114,10 @@ class LicenseConfigurationTest : WordSpec({
     "LicenseConfiguration" should {
         "allow querying a license by ID" {
             val lic1 = License(
-                SpdxSingleLicenseExpression.parse("ASL-1"), emptySortedSet(),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = false
+                SpdxSingleLicenseExpression.parse("ASL-1"), emptySortedSet()
             )
             val lic2 = License(
-                SpdxSingleLicenseExpression.parse("ASL-2"), emptySortedSet(),
-                includeInNoticeFile = true, includeSourceCodeOfferInNoticeFile = true
+                SpdxSingleLicenseExpression.parse("ASL-2"), emptySortedSet()
             )
             val licenseConfiguration = LicenseConfiguration(licenses = listOf(lic1, lic2))
 

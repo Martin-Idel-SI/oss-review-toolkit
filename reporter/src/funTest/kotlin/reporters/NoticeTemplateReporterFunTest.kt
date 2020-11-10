@@ -31,8 +31,12 @@ import org.ossreviewtoolkit.model.config.FileStorageConfiguration
 import org.ossreviewtoolkit.model.config.LocalFileStorageConfiguration
 import org.ossreviewtoolkit.model.config.OrtConfiguration
 import org.ossreviewtoolkit.model.config.ScannerConfiguration
+import org.ossreviewtoolkit.model.licenses.License
+import org.ossreviewtoolkit.model.licenses.LicenseCategory
+import org.ossreviewtoolkit.model.licenses.LicenseConfiguration
 import org.ossreviewtoolkit.reporter.ORT_RESULT
 import org.ossreviewtoolkit.reporter.ReporterInput
+import org.ossreviewtoolkit.spdx.SpdxSingleLicenseExpression
 import org.ossreviewtoolkit.utils.LicenseFilenamePatterns.LICENSE_FILENAMES
 import org.ossreviewtoolkit.utils.ORT_NAME
 
@@ -91,10 +95,26 @@ private fun generateReport(
     val input = ReporterInput(
         ortResult,
         config,
-        copyrightGarbage = copyrightGarbage
+        copyrightGarbage = copyrightGarbage,
+        licenseConfiguration = createLicenseConfiguration()
     )
 
     val outputDir = createTempDir(ORT_NAME, NoticeTemplateReporterFunTest::class.simpleName).apply { deleteOnExit() }
 
     return NoticeTemplateReporter().generateReport(input, outputDir, options).single().readText()
+}
+
+private fun createLicenseConfiguration(): LicenseConfiguration {
+    val catIncludeNotice = LicenseCategory("include-in-notice-file")
+    val catIncludeSource = LicenseCategory("include-source-code-offer-in-notice-file")
+    val licMit = License(
+        SpdxSingleLicenseExpression.parse("MIT"), sortedSetOf(catIncludeNotice.name)
+    )
+    val licBsd = License(
+        SpdxSingleLicenseExpression.parse("BSD-3-Clause"), sortedSetOf(catIncludeSource.name)
+    )
+    return LicenseConfiguration(
+        licenseCategories = listOf(catIncludeNotice, catIncludeSource),
+        licenses = listOf(licMit, licBsd)
+    )
 }

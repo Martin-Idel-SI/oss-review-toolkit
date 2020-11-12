@@ -32,7 +32,7 @@ import org.ossreviewtoolkit.reporter.utils.FreemarkerTemplateGenerator
 class AsciiDocsAttributionDocumentReporter : Reporter {
     companion object {
         private const val ASCIIDOCS_FILE_PREFIX = "Asciidocs_"
-        private const val ASCIIDOCS_DEFAULT_TEMPLATE = "asciidoc_test"
+        private const val ASCIIDOCS_DEFAULT_TEMPLATE = "asciidoc"
 
         private const val OPTION_PDF_THEME_PATH = "pdf-theme.path"
     }

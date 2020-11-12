@@ -23,6 +23,7 @@ import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNot
@@ -46,6 +47,7 @@ import org.ossreviewtoolkit.model.utils.createLicenseInfoResolver
 import org.ossreviewtoolkit.reporter.HowToFixTextProvider
 import org.ossreviewtoolkit.reporter.ReporterInput
 import org.ossreviewtoolkit.reporter.reporters.AntennaAttributionDocumentReporter
+import org.ossreviewtoolkit.reporter.reporters.AsciiDocsAttributionDocumentReporter
 import org.ossreviewtoolkit.utils.ORT_NAME
 import org.ossreviewtoolkit.utils.ORT_REPO_CONFIG_FILENAME
 
@@ -144,6 +146,22 @@ class ExamplesFunTest : StringSpec() {
             )
 
             report should beEmpty()
+        }
+
+        "asciidoctor-pdf-theme.yml is a valid asciidoctor-pdf theme" {
+            val outputDir = createTempDir(
+                ORT_NAME, ExamplesFunTest::class.simpleName
+            ).apply { deleteOnExit() }
+
+            takeExampleFile("asciidoctor-pdf-theme.yml")
+
+            val report = AsciiDocsAttributionDocumentReporter().generateReport(
+                ReporterInput(OrtResult.EMPTY),
+                outputDir,
+                mapOf("pdf-theme.path" to examplesDir.resolve("asciidoctor-pdf-theme.yml").path)
+            )
+
+            report shouldHaveSize 1
         }
 
         "All example files should have been tested" {
